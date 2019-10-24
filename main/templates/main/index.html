@@ -1,0 +1,42 @@
+{% extends 'layout/basic.html' %}
+
+{% block header %}
+    <div class="block">
+        <p>Блок с элементами управления</p>
+    </div>
+    <br>
+{% endblock %}
+
+{% block content %}
+    <div class="block">
+        <table class="table_view">
+            <caption>Каталог товаров</caption>
+            <tr>
+                <th>Наименование</th>
+                <th>Описание</th>
+                <th>Цена</th>
+                <th>Количество</th>
+                <th>Состояние</th>
+                <th>Дата поступления</th>
+                <th>Категория</th>
+            </tr>
+            {% for product in products %}
+                <tr>
+                    <td class="cell_border">{{ product.title }}</td>
+                    <td class="cell_border">{{ product.description }}</td>
+                    <td class="cell_border">{{ product.price }}</td>
+                    <td class="cell_border">{{ product.count }}</td>
+                    <td class="cell_border">
+                        {% if product.state %}
+                            Новый
+                        {% else %}
+                            б/у
+                        {% endif %}
+                    </td>
+                    <td class="cell_border">{{ product.arrival_date }}</td>
+                    <td class="cell_border">{{ product.group }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

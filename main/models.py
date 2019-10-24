@@ -21,7 +21,7 @@ class Product(models.Model):
     title = models.CharField(max_length=50, verbose_name='Наименование')
     description = models.TextField(max_length=1000, verbose_name='Описание')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
-    count = models.IntegerField(verbose_name='Количество')
+    count = models.PositiveIntegerField(verbose_name='Количество')
     state = models.BooleanField(verbose_name='Новый', null=False)
     arrival_date = models.DateField(verbose_name='Дата поступления')
     group = models.ForeignKey(Group, on_delete=models.CASCADE, verbose_name='Группа')

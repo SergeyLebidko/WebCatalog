@@ -1,8 +1,16 @@
-div.block{
+div.block {
     background-color: RGB(240, 240, 240);
-    border: 2px solid RGB(220,220,220);
+    border: 2px solid RGB(220, 220, 220);
     padding: 10px;
     margin-left: auto;
     margin-right: auto;
-    width: 64em;
+    width: 95%;
+}
+
+table.table_view{
+    border-spacing: 10px;
+}
+
+td.cell_border {
+    border-bottom: 1px solid RGB(180, 180, 180);
 }
