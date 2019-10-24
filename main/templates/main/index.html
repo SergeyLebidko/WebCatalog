@@ -9,34 +9,36 @@
 
 {% block content %}
     <div class="block">
-        <table class="table_view">
-            <caption>Каталог товаров</caption>
-            <tr>
-                <th>Наименование</th>
-                <th>Описание</th>
-                <th>Цена</th>
-                <th>Количество</th>
-                <th>Состояние</th>
-                <th>Дата поступления</th>
-                <th>Категория</th>
-            </tr>
-            {% for product in products %}
+        <p>Каталог товаров - {{ group_name }}</p>
+        {% if products|length != 0 %}
+            <table class="table_view">
                 <tr>
-                    <td class="cell_border">{{ product.title }}</td>
-                    <td class="cell_border">{{ product.description }}</td>
-                    <td class="cell_border">{{ product.price }}</td>
-                    <td class="cell_border">{{ product.count }}</td>
-                    <td class="cell_border">
-                        {% if product.state %}
-                            Новый
-                        {% else %}
-                            б/у
-                        {% endif %}
-                    </td>
-                    <td class="cell_border">{{ product.arrival_date }}</td>
-                    <td class="cell_border">{{ product.group }}</td>
+                    <th>Наименование</th>
+                    <th>Описание</th>
+                    <th>Цена</th>
+                    <th>Количество</th>
+                    <th>Состояние</th>
+                    <th>Дата поступления</th>
                 </tr>
-            {% endfor %}
-        </table>
+                {% for product in products %}
+                    <tr>
+                        <td class="cell_border">{{ product.title }}</td>
+                        <td class="cell_border">{{ product.description }}</td>
+                        <td class="cell_border">{{ product.price }}</td>
+                        <td class="cell_border">{{ product.count }}</td>
+                        <td class="cell_border">
+                            {% if product.state %}
+                                Новый
+                            {% else %}
+                                б/у
+                            {% endif %}
+                        </td>
+                        <td class="cell_border">{{ product.arrival_date }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>Нет товаров в выбранной категории</p>
+        {% endif %}
     </div>
 {% endblock %}
