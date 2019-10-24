@@ -7,6 +7,15 @@ div.block {
     width: 95%;
 }
 
+div.small_block{
+    background-color: RGB(240, 240, 240);
+    border: 2px solid RGB(220, 220, 220);
+    padding: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+}
+
 table.table_view{
     border-spacing: 10px;
 }

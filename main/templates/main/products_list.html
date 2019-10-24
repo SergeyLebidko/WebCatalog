@@ -2,14 +2,27 @@
 
 {% block header %}
     <div class="block">
-        <p>Блок с элементами управления</p>
+        <p>
+            {% if selected_group is not None %}
+                <a href="{% url 'create_product' %}?group_id={{ selected_group }}">Добавить товар</a>
+            {% else %}
+                Выберите группу, если хотите добавить товар
+            {% endif %}
+
+        </p>
     </div>
     <br>
 {% endblock %}
 
 {% block content %}
     <div class="block">
-        <p>Каталог товаров - {{ group_name }}</p>
+        <p>Каталог товаров -
+            {% if selected_group is not None %}
+                {{ selected_group }}
+            {% else %}
+                все категории
+            {% endif %}
+        </p>
         {% if products|length != 0 %}
             <table class="table_view">
                 <tr>
