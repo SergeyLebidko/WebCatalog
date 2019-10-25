@@ -1,0 +1,50 @@
+{% extends 'layout/basic.html' %}
+
+{% block header %}
+    <div class="block">
+        <p>
+            Блок-заголовок
+        </p>
+    </div>
+    <br>
+{% endblock %}
+
+{% block content %}
+    <div class="block">
+        <p>
+            {% if current_group.is_root_group %}
+                <b>Каталог товаров:</b>
+            {% else %}
+                <b>Категория: {{ current_group }}</b>
+            {% endif %}
+            <br>
+            {% if root_group is not None %}
+                <a href="{% url 'groups_list' %}?group_id={{ root_group.pk }}">
+                    Вверх
+                </a>
+            {% endif %}
+        </p>
+        <p>
+            {% if sub_groups|length != 0 %}
+                <table class="table_view">
+                    {% for sub_group in sub_groups %}
+                        <tr>
+                            <td class="cell_border">
+                                <a href="{% url 'groups_list' %}?group_id={{ sub_group.pk }}">
+                                    {{ sub_group }}
+                                </a>
+                            </td>
+                            <td class="cell_border">
+                                <a href="{% url 'products_list' %}?group_id={{ sub_group.pk }}">
+                                    Товаров: {{ sub_group.get_product_count }}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                нет подкатегорий...
+            {% endif %}
+        </p>
+    </div>
+{% endblock %}

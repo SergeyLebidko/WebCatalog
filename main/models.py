@@ -3,9 +3,17 @@ from django.db import models
 
 # Группы товаров
 class Group(models.Model):
-    title = models.CharField(max_length=50, verbose_name='Группа')
+    title = models.CharField(max_length=50, unique=True, verbose_name='Группа')
     parent_group = models.ForeignKey('self', on_delete=models.CASCADE, verbose_name='Корневая группа', null=True,
                                      blank=True)
+
+    # Метод возвращает количество товаров в группе
+    def get_product_count(self):
+        return Product.objects.filter(group=self).count()
+
+    # Метод возвращает True для корневой группы и False - для всех остальных
+    def is_root_group(self):
+        return self.parent_group is None
 
     def __str__(self):
         return self.title
@@ -18,7 +26,7 @@ class Group(models.Model):
 
 # Товары
 class Product(models.Model):
-    title = models.CharField(max_length=50, blank=False, verbose_name='Наименование')
+    title = models.CharField(max_length=50, blank=False, unique=True, verbose_name='Наименование')
     description = models.TextField(max_length=1000, blank=False, verbose_name='Описание')
     price = models.DecimalField(max_digits=10, decimal_places=2, blank=False, verbose_name='Цена')
     count = models.PositiveIntegerField(blank=False, verbose_name='Количество')

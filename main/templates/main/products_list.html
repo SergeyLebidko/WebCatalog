@@ -4,9 +4,11 @@
     <div class="block">
         <p>
             {% if selected_group is not None %}
+                <a href="{% url 'products_list' %}">Полный список товаров</a>
+                |
                 <a href="{% url 'create_product' %}?group_id={{ selected_group }}">Добавить товар</a>
             {% else %}
-                Выберите группу, если хотите добавить товар
+                Выберите категорию, если хотите добавить товар
             {% endif %}
 
         </p>
@@ -18,9 +20,13 @@
     <div class="block">
         <p>Каталог товаров -
             {% if selected_group is not None %}
-                {{ selected_group }}
+                <a href="{% url 'groups_list' %}?group_id={{ selected_group.pk }}">
+                    {{ selected_group }}
+                </a>
             {% else %}
-                все категории
+                <a href="{% url 'groups_list' %}">
+                    все категории
+                </a>
             {% endif %}
         </p>
         {% if products|length != 0 %}

@@ -6,7 +6,7 @@ from .models import Group, Product
 from .forms import ProductForm
 
 
-# Функция выводит главную страницу
+# Контроллер выводит страницу со списком товаров
 def products_list(request):
     # Получаем выбранную группу
     if 'group_id' in request.GET:
@@ -32,6 +32,28 @@ def products_list(request):
         context['selected_group'] = None
 
     return render(request, 'main/products_list.html', context)
+
+
+# Контроллер для работы со списком групп
+def groups_list(request):
+    # Если контроллеру не передан номер группы, то будет выведена информация о корневой группе
+    if 'group_id' not in request.GET:
+        current_group = Group.objects.get(parent_group=None)
+    else:
+        try:
+            # Если контроллеру передан некорректный номер группы, то возвращается ошибка 400
+            current_group = Group.objects.get(pk=request.GET['group_id'])
+        except (Group.DoesNotExist, Group.MultipleObjectsReturned):
+            return HttpResponseBadRequest()
+
+    # Получаем список подгрупп выбранной группы
+    sub_groups = Group.objects.filter(parent_group=current_group)
+
+    # Получаем группу корневую для текущей
+    root_group = current_group.parent_group
+
+    context = {'current_group': current_group, 'sub_groups': sub_groups, 'root_group': root_group}
+    return render(request, 'main/groups_list.html', context)
 
 
 # Класс-контроллер для добавления продуктов в базу
