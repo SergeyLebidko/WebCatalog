@@ -7,9 +7,17 @@ class Group(models.Model):
     parent_group = models.ForeignKey('self', on_delete=models.CASCADE, verbose_name='Корневая группа', null=True,
                                      blank=True)
 
-    # Метод возвращает количество товаров в группе
+    # Метод возвращает количество товаров в группе и её подгруппах
     def get_product_count(self):
-        return Product.objects.filter(group=self).count()
+        # Получаем список товаров в группе
+        product_count = Product.objects.filter(group=self).count()
+
+        # Получаем список подгрупп и для каждой запрашиваем количество товаров в ней
+        sub_groups = Group.objects.filter(parent_group=self)
+        for sub_group in sub_groups:
+            product_count += sub_group.get_product_count()
+
+        return product_count
 
     # Метод возвращает True для корневой группы и False - для всех остальных
     def is_root_group(self):
