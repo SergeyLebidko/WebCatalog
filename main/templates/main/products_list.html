@@ -6,7 +6,7 @@
             {% if selected_group is not None %}
                 <a href="{% url 'products_list' %}">Полный список товаров</a>
                 |
-                <a href="{% url 'create_product' %}?group_id={{ selected_group }}">Добавить товар</a>
+                <a href="{% url 'create_product' %}?group_id={{ selected_group.pk }}">Добавить товар</a>
             {% else %}
                 Выберите категорию, если хотите добавить товар
             {% endif %}

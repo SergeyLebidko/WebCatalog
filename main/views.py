@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic.edit import FormView
 from django.http import HttpResponseBadRequest
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from .models import Group, Product
 from .forms import ProductForm
 
@@ -67,6 +67,10 @@ class ProductCreator(FormView):
             return HttpResponseBadRequest()
         return super().get(request, *args, **kwargs)
 
+    def get_success_url(self):
+        url = super().get_success_url()+'?group_id='+str(self.group_id)
+        return url
+
     def form_valid(self, form):
         new_product = form.save(commit=False)
         group_id = self.request.GET['group_id']
@@ -76,4 +80,5 @@ class ProductCreator(FormView):
             return HttpResponseBadRequest()
         new_product.group = selected_group
         new_product.save()
+        self.group_id = group_id
         return super().form_valid(form)
