@@ -41,7 +41,11 @@
                 </tr>
                 {% for product in products %}
                     <tr>
-                        <td class="cell_border">{{ product.title }}</td>
+                        <td class="cell_border">
+                            <a href="{% url 'edit_product' %}?product_id={{ product.pk }}">
+                                {{ product.title }}
+                            </a>
+                        </td>
                         <td class="cell_border">{{ product.description }}</td>
                         <td class="cell_border">{{ product.price }}</td>
                         <td class="cell_border">{{ product.count }}</td>

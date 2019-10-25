@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic.edit import FormView
-from django.http import HttpResponseBadRequest
-from django.urls import reverse_lazy
+from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.urls import reverse_lazy, reverse
 from .models import Group, Product
 from .forms import GroupForm, ProductForm
 
@@ -56,7 +56,35 @@ def groups_list(request):
     return render(request, 'main/groups_list.html', context)
 
 
-# Класс-контроллер для добавления продуктов в базу
+# Контроллер-функция для редактирования отдельных товаров
+def edit_product(request):
+    if request.method == 'GET':
+        # Пытаемся получить группу, которую будем редактировать
+        if 'product_id' in request.GET:
+            try:
+                edited_product = Product.objects.get(pk=request.GET['product_id'])
+            except (Product.DoesNotExist, Product.MultipleObjectsReturned):
+                return HttpResponseBadRequest()
+        else:
+            return HttpResponseBadRequest()
+
+        # Создаем форму для редактирования
+        form = ProductForm(instance=edited_product)
+
+        context = {'form': form, 'product_id': request.GET['product_id']}
+        return render(request, 'main/edit_product.html', context)
+
+    if request.method == 'POST':
+        edited_product = Product.objects.get(pk=request.POST['product_id'])
+        form = ProductForm(request.POST, instance=edited_product)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('products_list'))
+        else:
+            return HttpResponseRedirect(reverse('edit_product') + '?product_id=' + request.POST['product_id'])
+
+
+# Класс-контроллер для добавления товаров в базу
 class ProductCreator(FormView):
     form_class = ProductForm
     template_name = 'main/create_product.html'
