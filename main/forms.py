@@ -1,5 +1,12 @@
 from django import forms
-from .models import Product
+from .models import Group, Product
+
+
+# Форма добавления новой группы
+class GroupForm(forms.ModelForm):
+    class Meta:
+        model = Group
+        fields = ['title']
 
 
 # Форма добавления нового продукта

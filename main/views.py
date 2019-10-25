@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.views.generic.edit import FormView
 from django.http import HttpResponseBadRequest
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from .models import Group, Product
-from .forms import ProductForm
+from .forms import GroupForm, ProductForm
 
 
 # Контроллер выводит страницу со списком товаров
@@ -68,7 +68,7 @@ class ProductCreator(FormView):
         return super().get(request, *args, **kwargs)
 
     def get_success_url(self):
-        url = super().get_success_url()+'?group_id='+str(self.group_id)
+        url = super().get_success_url() + '?group_id=' + str(self.group_id)
         return url
 
     def form_valid(self, form):
@@ -81,4 +81,32 @@ class ProductCreator(FormView):
         new_product.group = selected_group
         new_product.save()
         self.group_id = group_id
+        return super().form_valid(form)
+
+
+# Класс-контроллер для добавления групп
+class GroupCreator(FormView):
+    form_class = GroupForm
+    template_name = 'main/create_group.html'
+    success_url = reverse_lazy('groups_list')
+
+    def get(self, request, *args, **kwargs):
+        if 'root_group_id' not in request.GET:
+            return HttpResponseBadRequest()
+        return super().get(request, *args, **kwargs)
+
+    def get_success_url(self):
+        url = super().get_success_url() + '?group_id=' + str(self.root_group_id)
+        return url
+
+    def form_valid(self, form):
+        new_group = form.save(commit=False)
+        root_group_id = self.request.GET['root_group_id']
+        try:
+            root_group = Group.objects.get(pk=root_group_id)
+        except (Group.DoesNotExist, Group.MultipleObjectsReturned):
+            return HttpResponseBadRequest()
+        new_group.parent_group = root_group
+        new_group.save()
+        self.root_group_id = root_group_id
         return super().form_valid(form)

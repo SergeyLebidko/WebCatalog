@@ -3,7 +3,7 @@
 {% block header %}
     <div class="block">
         <p>
-            Управление категориями товаров
+            <a href="{% url 'create_group' %}?root_group_id={{ current_group.id }}">Добавить группу</a>
         </p>
     </div>
     <br>
