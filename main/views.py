@@ -84,6 +84,23 @@ def edit_product(request):
             return HttpResponseRedirect(reverse('edit_product') + '?product_id=' + request.POST['product_id'])
 
 
+# Контроллер-функция для удаления товаров
+def remove_product(request):
+    # Получаем удаляемый товар
+    if 'product_id' not in request.GET:
+        return HttpResponseBadRequest()
+    try:
+        product = Product.objects.get(pk=request.GET['product_id'])
+    except (Product.DoesNotExist, Product.MultipleObjectsReturned):
+        return HttpResponseBadRequest()
+
+    # Удаляем товар
+    group_id = product.group.pk
+    product.delete()
+
+    return HttpResponseRedirect(reverse_lazy('products_list') + '?group_id=' + str(group_id))
+
+
 # Класс-контроллер для добавления товаров в базу
 class ProductCreator(FormView):
     form_class = ProductForm
@@ -140,7 +157,7 @@ class GroupCreator(FormView):
         return super().form_valid(form)
 
 
-# Класс-кнтроллер для редактирования групп
+# Класс-контроллер для редактирования групп
 class GroupEditor(UpdateView):
     model = Group
     form_class = GroupForm

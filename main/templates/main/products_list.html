@@ -57,6 +57,11 @@
                             {% endif %}
                         </td>
                         <td class="cell_border">{{ product.arrival_date }}</td>
+                        <td class="cell_border">
+                            <a href="{% url 'remove_product' %}?product_id={{ product.pk }}">
+                                Удалить
+                            </a>
+                        </td>
                     </tr>
                 {% endfor %}
             </table>

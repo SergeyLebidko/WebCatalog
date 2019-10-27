@@ -8,5 +8,6 @@ urlpatterns = [
     path('create_group/', GroupCreator.as_view(), name='create_group'),
     path('create_product/', ProductCreator.as_view(), name='create_product'),
     path('edit_product/', edit_product, name='edit_product'),
-    path('edit_group/', GroupEditor.as_view(), name='edit_group')
+    path('edit_group/', GroupEditor.as_view(), name='edit_group'),
+    path('remove_product/', remove_product, name='remove_product')
 ]
