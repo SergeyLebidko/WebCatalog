@@ -3,6 +3,8 @@
 {% block header %}
     <div class="block">
         <p>
+            <a href="{% url 'products_list' %}">Каталог товаров</a>
+            &nbsp;
             <a href="{% url 'create_group' %}?root_group_id={{ current_group.id }}">Добавить группу</a>
         </p>
     </div>
@@ -42,6 +44,11 @@
                             <td class="cell_border">
                                 <a href="{% url 'edit_group' %}?group_id={{ sub_group.pk }}">
                                     Изменить
+                                </a>
+                            </td>
+                            <td class="cell_border">
+                                <a href="{% url 'remove_group' %}?group_id={{ sub_group.pk }}">
+                                    Удалить
                                 </a>
                             </td>
                         </tr>

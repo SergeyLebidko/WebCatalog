@@ -101,6 +101,23 @@ def remove_product(request):
     return HttpResponseRedirect(reverse_lazy('products_list') + '?group_id=' + str(group_id))
 
 
+# Контроллер-функция удаления группы
+def remove_group(request):
+    # Получаем удаляемую группу
+    if 'group_id' not in request.GET:
+        return HttpResponseBadRequest()
+    try:
+        group = Group.objects.get(pk=request.GET['group_id'])
+    except (Group.DoesNotExist, Group.MultipleObjectsReturned):
+        return HttpResponseBadRequest()
+
+    # Удаляем группу
+    root_group_id = group.parent_group.pk
+    group.delete()
+
+    return HttpResponseRedirect(reverse_lazy('groups_list') + '?group_id=' + str(root_group_id))
+
+
 # Класс-контроллер для добавления товаров в базу
 class ProductCreator(FormView):
     form_class = ProductForm
