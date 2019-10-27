@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from django.views.generic.edit import FormView
-from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.views.generic.edit import FormView, UpdateView
+from django.http import HttpResponseBadRequest, HttpResponseRedirect, Http404
 from django.urls import reverse_lazy, reverse
 from .models import Group, Product
 from .forms import GroupForm, ProductForm
@@ -138,3 +138,28 @@ class GroupCreator(FormView):
         new_group.save()
         self.root_group_id = root_group_id
         return super().form_valid(form)
+
+
+# Класс-кнтроллер для редактирования групп
+class GroupEditor(UpdateView):
+    model = Group
+    form_class = GroupForm
+    template_name = 'main/edit_group.html'
+    pk_url_kwarg = 'group_id'
+
+    def get_object(self, queryset=None):
+        if 'group_id' not in self.request.GET:
+            raise Http404()
+        try:
+            obj = Group.objects.get(pk=self.request.GET['group_id'])
+        except (Group.DoesNotExist, Group.MultipleObjectsReturned):
+            raise Http404()
+        # self.object = obj
+        return obj
+
+    def get_success_url(self):
+        root_group = self.object.parent_group
+        if root_group is None:
+            return reverse_lazy('groups_list')
+        else:
+            return reverse_lazy('groups_list') + '?group_id=' + str(root_group.pk)

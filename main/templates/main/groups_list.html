@@ -39,6 +39,11 @@
                                     Товаров: {{ sub_group.get_product_count }}
                                 </a>
                             </td>
+                            <td class="cell_border">
+                                <a href="{% url 'edit_group' %}?group_id={{ sub_group.pk }}">
+                                    Изменить
+                                </a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>
