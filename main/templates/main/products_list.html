@@ -65,6 +65,63 @@
                     </tr>
                 {% endfor %}
             </table>
+            <p align="center">
+                {# Вставляем ссылку на первую страницу #}
+                {% if page.has_previous and selected_group is not None %}
+                    <a href="{% url 'products_list' %}?group_id={{ selected_group.pk }}&page=1">
+                        Первая страница
+                    </a>
+                {% endif %}
+                {% if page.has_previous and selected_group is None %}
+                    <a href="{% url 'products_list' %}?page=1">
+                        Первая страница
+                    </a>
+                {% endif %}
+
+                {# Вставляем ссылку на предыдущую страницу #}
+                &nbsp
+                {% if page.has_previous and selected_group is not None %}
+                    <a href="{% url 'products_list' %}?group_id={{ selected_group.pk }}&page={{ page.previous_page_number }}">
+                        {{ page.previous_page_number }}
+                    </a>
+                {% endif %}
+                {% if page.has_previous and selected_group is None %}
+                    <a href="{% url 'products_list' %}?page={{ page.previous_page_number }}">
+                        {{ page.previous_page_number }}
+                    </a>
+                {% endif %}
+
+                {# Вставляем номер текущей страницы #}
+                &nbsp
+                {{ page.number }}
+                &nbsp
+
+                {# Вставляем ссылку на следующую страницу #}
+                {% if page.has_next and selected_group is not None %}
+                    <a href="{% url 'products_list' %}?group_id={{ selected_group.pk }}&page={{ page.next_page_number }}">
+                        {{ page.next_page_number }}
+                    </a>
+                {% endif %}
+                {% if page.has_next and selected_group is None %}
+                    <a href="{% url 'products_list' %}?page={{ page.next_page_number }}">
+                        {{ page.next_page_number }}
+                    </a>
+                {% endif %}
+
+                {# Вставляем ссылку на последнюю страницу #}
+                &nbsp
+                {% if page.has_next and selected_group is not None %}
+                    <a href="{% url 'products_list' %}?group_id={{ selected_group.pk }}&page={{ page.paginator.num_pages }}">
+                        Последняя страница
+                    </a>
+                {% endif %}
+                {% if page.has_next and selected_group is None %}
+                    <a href="{% url 'products_list' %}?page={{ page.paginator.num_pages }}">
+                        Последняя страница
+                    </a>
+                {% endif %}
+
+            </p>
         {% else %}
             <p>Нет товаров в выбранной категории</p>
         {% endif %}

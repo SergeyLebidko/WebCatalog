@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.generic.edit import FormView, UpdateView
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, Http404
 from django.urls import reverse_lazy, reverse
+from django.core.paginator import Paginator
 from .models import Group, Product
 from .forms import GroupForm, ProductForm
 
@@ -25,7 +26,17 @@ def products_list(request):
         products = Product.objects.all()
 
     # Формируем контекст страницы
-    context = {'products': products}
+    paginator = Paginator(products, 5)
+    if 'page' in request.GET:
+        page_num = request.GET['page']
+    else:
+        page_num = 1
+    if not (1 <= int(page_num) <= int(paginator.num_pages)):
+        return HttpResponseBadRequest()
+    page = paginator.get_page(page_num)
+    products = page.object_list
+
+    context = {'products': products, 'page': page}
     if selected_group is not None:
         context['selected_group'] = selected_group
     else:
