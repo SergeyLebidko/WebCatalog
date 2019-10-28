@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic.edit import FormView, UpdateView
-from django.db.models import Min, Max, Count
+from django.db.models import Min, Max, Count, Sum, F
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, Http404
 from django.urls import reverse_lazy, reverse
 from django.core.paginator import Paginator
@@ -149,6 +149,16 @@ def statistic(request):
     # Пример использования группировки. Получаем количество товаров, поступивших в каждую из дат
     count_products_in_date = Product.objects.values('arrival_date').order_by('-arrival_date').annotate(cnt=Count('pk'))
 
+    # Получаем суммарную стоимость товаров, поступивших в каждый из дней
+    costs_on_date = []
+    dates_list = Product.objects.values('arrival_date').order_by('-arrival_date').distinct()
+    for date in dates_list:
+        products_on_date = Product.objects.filter(arrival_date=date['arrival_date'])
+        cost_on_date = 0
+        for product in products_on_date:
+            cost_on_date += product.cost()
+        costs_on_date.append({'date': date['arrival_date'], 'cost': cost_on_date})
+
     context = {
         'price_min': price_min,
         'price_max': price_max,
@@ -157,7 +167,8 @@ def statistic(request):
         'avg_price': avg_price,
         'products_count': products_count,
         'total_cost': total_cost,
-        'count_products_in_date': count_products_in_date
+        'count_products_in_date': count_products_in_date,
+        'costs_on_date': costs_on_date
     }
     return render(request, 'main/statistic.html', context)
 

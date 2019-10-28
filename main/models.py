@@ -42,6 +42,9 @@ class Product(models.Model):
     arrival_date = models.DateField(blank=False, verbose_name='Дата поступления')
     group = models.ForeignKey(Group, on_delete=models.CASCADE, verbose_name='Группа')
 
+    def cost(self):
+        return self.price * self.count
+
     class Meta:
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'

@@ -44,5 +44,12 @@
             {% endfor %}
 
         </p>
+        <p>
+            Общая стоимость поступивших товаров по датам:<br>
+            {% for cost_on_date in costs_on_date %}
+                {{ cost_on_date.date }} - {{ cost_on_date.cost }}<br>
+            {% endfor %}
+
+        </p>
     </div>
 {% endblock %}
