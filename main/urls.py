@@ -10,5 +10,6 @@ urlpatterns = [
     path('edit_product/', edit_product, name='edit_product'),
     path('edit_group/', GroupEditor.as_view(), name='edit_group'),
     path('remove_product/', remove_product, name='remove_product'),
-    path('remove_group/', remove_group, name='remove_group')
+    path('remove_group/', remove_group, name='remove_group'),
+    path('statistic/', statistic, name='satistic')
 ]

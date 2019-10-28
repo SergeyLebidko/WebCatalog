@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.views.generic.edit import FormView, UpdateView
+from django.db.models import Min, Max, Count
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, Http404
 from django.urls import reverse_lazy, reverse
 from django.core.paginator import Paginator
@@ -127,6 +128,38 @@ def remove_group(request):
     group.delete()
 
     return HttpResponseRedirect(reverse_lazy('groups_list') + '?group_id=' + str(root_group_id))
+
+
+# Контроллер-функция для формирования страницы статистики
+def statistic(request):
+    price_stat = Product.objects.aggregate(Min('price'), Max('price'))
+    price_min = price_stat['price__min']
+    price_max = price_stat['price__max']
+    products_with_min_price = Product.objects.filter(price=price_min)
+    products_with_max_price = Product.objects.filter(price=price_max)
+    avg_price = (price_min + price_max) // 2
+
+    all_products = Product.objects.all()
+    products_count = all_products.count()
+
+    total_cost = 0
+    for product in all_products:
+        total_cost += (product.price * product.count)
+
+    # Пример использования группировки. Получаем количество товаров, поступивших в каждую из дат
+    count_products_in_date = Product.objects.values('arrival_date').order_by('-arrival_date').annotate(cnt=Count('pk'))
+
+    context = {
+        'price_min': price_min,
+        'price_max': price_max,
+        'products_with_min_price': products_with_min_price,
+        'products_with_max_price': products_with_max_price,
+        'avg_price': avg_price,
+        'products_count': products_count,
+        'total_cost': total_cost,
+        'count_products_in_date': count_products_in_date
+    }
+    return render(request, 'main/statistic.html', context)
 
 
 # Класс-контроллер для добавления товаров в базу

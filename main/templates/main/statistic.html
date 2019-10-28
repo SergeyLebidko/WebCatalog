@@ -1,0 +1,48 @@
+{% extends 'layout/basic.html' %}
+
+{% block header %}
+    <div class="block">
+        <a href="{% url 'products_list' %}">Каталог товаров</a>
+    </div>
+    <br>
+{% endblock %}
+
+{% block content %}
+    <div class="block">
+        <h4>Статистика</h4>
+        <p>
+            Общее количество наименований (товаров) в базе: {{ products_count }}<br>
+        </p>
+        <p>
+            Минимальная цена на товар в базе: {{ price_min }}<br>
+            Товары с минимальной ценой:
+        <ul>
+            {% for product in products_with_min_price %}
+                <li>{{ product.title }}</li>
+            {% endfor %}
+        </ul>
+        </p>
+        <p>
+            Максимальная цена на товар в базе: {{ price_max }}<br>
+            Товары с максимальной ценой:
+        <ul>
+            {% for product in products_with_max_price %}
+                <li>{{ product.title }}</li>
+            {% endfor %}
+        </ul>
+        </p>
+        <p>
+            Средняя цена: {{ avg_price }}<br>
+        </p>
+        <p>
+            Общая стоимость всех товаров в базе: {{ total_cost }}<br>
+        </p>
+        <p>
+            Поступления товаров по датам:<br>
+            {% for count in count_products_in_date %}
+                {{ count.arrival_date }} - {{ count.cnt }}<br>
+            {% endfor %}
+
+        </p>
+    </div>
+{% endblock %}
